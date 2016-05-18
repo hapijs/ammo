@@ -103,6 +103,7 @@ describe('Stream', () => {
 
         Wreck.read(source.pipe(stream), {}, (err, buffer) => {
 
+            expect(err).to.not.exist();
             expect(buffer.toString()).to.equal(random.slice(1000, 4001).toString());
             done();
         });
@@ -140,6 +141,7 @@ describe('Stream', () => {
         const source = new TestStream();
         Wreck.read(source.pipe(stream), {}, (err, buffer) => {
 
+            expect(err).to.not.exist();
             expect(buffer.toString()).to.equal('234');
             done();
         });
