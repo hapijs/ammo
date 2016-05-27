@@ -27,31 +27,31 @@ describe('header()', () => {
 
     it('parses header (start)', (done) => {
 
-        expect(Ammo.header('bytes=0-4', 10)).to.deep.equal([{ from: 0, to: 4 }]);
+        expect(Ammo.header('bytes=0-4', 10)).to.equal([{ from: 0, to: 4 }]);
         done();
     });
 
     it('parses header (middle)', (done) => {
 
-        expect(Ammo.header('bytes=1-5', 10)).to.deep.equal([{ from: 1, to: 5 }]);
+        expect(Ammo.header('bytes=1-5', 10)).to.equal([{ from: 1, to: 5 }]);
         done();
     });
 
     it('parses header (-to)', (done) => {
 
-        expect(Ammo.header('bytes=-5', 10)).to.deep.equal([{ from: 5, to: 9 }]);
+        expect(Ammo.header('bytes=-5', 10)).to.equal([{ from: 5, to: 9 }]);
         done();
     });
 
     it('parses header (from-)', (done) => {
 
-        expect(Ammo.header('bytes=5-', 45000)).to.deep.equal([{ from: 5, to: 44999 }]);
+        expect(Ammo.header('bytes=5-', 45000)).to.equal([{ from: 5, to: 44999 }]);
         done();
     });
 
     it('parses header (beyond end)', (done) => {
 
-        expect(Ammo.header('bytes=10-20', 15)).to.deep.equal([{ from: 10, to: 14 }]);
+        expect(Ammo.header('bytes=10-20', 15)).to.equal([{ from: 10, to: 14 }]);
         done();
     });
 
@@ -81,13 +81,13 @@ describe('header()', () => {
 
     it('parses header (multiple ranges)', (done) => {
 
-        expect(Ammo.header('bytes=1-5,7-10', 10)).to.deep.equal([{ from: 1, to: 5 }, { from: 7, to: 9 }]);
+        expect(Ammo.header('bytes=1-5,7-10', 10)).to.equal([{ from: 1, to: 5 }, { from: 7, to: 9 }]);
         done();
     });
 
     it('parses header (overlapping ranges)', (done) => {
 
-        expect(Ammo.header('bytes=1-5,5-10', 10)).to.deep.equal([{ from: 1, to: 9 }]);
+        expect(Ammo.header('bytes=1-5,5-10', 10)).to.equal([{ from: 1, to: 9 }]);
         done();
     });
 });
