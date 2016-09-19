@@ -36,9 +36,9 @@ Parses the range from a HTTP header.
 * `header` - A string in the form of `bytes=from-to`, where `from` and `to` are
 integers specifying the range. Both are optional. Multiple ranges can be passed
 as a comma delimited list.
-* `length` - The maximum length the range can cover. If a `to` value passed in
-the `header` string is greater than `length`, the `to` value is set as
-`length - 1`.
+* `length` - A positive integer specifying the maximum length the range can
+cover. If a `to` value passed in the `header` string is greater than `length`,
+the `to` value is set as `length - 1`.
 
 Returns an array of objects with the properties `from` and `to`, which specify
 the beginning and ending of the range. Overlapping ranges are combined into one
@@ -48,6 +48,6 @@ object. Returns `null` for invalid input.
 
 Creates a [`Transform Stream`](https://nodejs.org/api/stream.html) that extracts
 the portion of a piped in stream within `range`.
-* `range` - an object with the properties `to` and `from` that specify the range
+* `range` - an object with the properties `from` and `to` that specify the range
 of the piped in stream to read. Objects returned by `Ammo.header` can be passed
 into `range`.
