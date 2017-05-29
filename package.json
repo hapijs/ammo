@@ -21,6 +21,7 @@
     "lab": "13.x.x",
     "wreck": "12.x.x"
   },
+  "pre-commit": "test",
   "scripts": {
     "test": "lab -a code -t 100 -L",
     "test-cov-html": "lab -a code -r html -o coverage.html"
