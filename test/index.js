@@ -3,6 +3,7 @@
 // Load modules
 
 const Stream = require('stream');
+
 const Ammo = require('..');
 const Code = require('code');
 const Hoek = require('hoek');
@@ -17,99 +18,82 @@ const internals = {};
 
 // Test shortcuts
 
-const lab = exports.lab = Lab.script();
-const describe = lab.describe;
-const it = lab.it;
+const { describe, it } = exports.lab = Lab.script();
 const expect = Code.expect;
 
 
 describe('header()', () => {
 
-    it('parses header (start)', (done) => {
+    it('parses header (start)', async () => {
 
         expect(Ammo.header('bytes=0-4', 10)).to.equal([{ from: 0, to: 4 }]);
-        done();
     });
 
-    it('parses header (middle)', (done) => {
+    it('parses header (middle)', async () => {
 
         expect(Ammo.header('bytes=1-5', 10)).to.equal([{ from: 1, to: 5 }]);
-        done();
     });
 
-    it('parses header (-to)', (done) => {
+    it('parses header (-to)', async () => {
 
         expect(Ammo.header('bytes=-5', 10)).to.equal([{ from: 5, to: 9 }]);
-        done();
     });
 
-    it('parses header (from-)', (done) => {
+    it('parses header (from-)', async () => {
 
         expect(Ammo.header('bytes=5-', 45000)).to.equal([{ from: 5, to: 44999 }]);
-        done();
     });
 
-    it('parses header (beyond end)', (done) => {
+    it('parses header (beyond end)', async () => {
 
         expect(Ammo.header('bytes=10-20', 15)).to.equal([{ from: 10, to: 14 }]);
-        done();
     });
 
-    it('parses header (wrong unit)', (done) => {
+    it('parses header (wrong unit)', async () => {
 
         expect(Ammo.header('horses=1-5', 10)).to.equal(null);
-        done();
     });
 
-    it('parses header (flipped)', (done) => {
+    it('parses header (flipped)', async () => {
 
         expect(Ammo.header('bytes=5-1', 10)).to.equal(null);
-        done();
     });
 
-    it('parses header (missing =)', (done) => {
+    it('parses header (missing =)', async () => {
 
         expect(Ammo.header('bytes 1-5', 10)).to.equal(null);
-        done();
     });
 
-    it('parses header (missing to and from)', (done) => {
+    it('parses header (missing to and from)', async () => {
 
         expect(Ammo.header('bytes=-', 10)).to.equal(null);
-        done();
     });
 
-    it('parses header (multiple ranges)', (done) => {
+    it('parses header (multiple ranges)', async () => {
 
         expect(Ammo.header('bytes=1-5,7-10', 10)).to.equal([{ from: 1, to: 5 }, { from: 7, to: 9 }]);
-        done();
     });
 
-    it('parses header (overlapping ranges)', (done) => {
+    it('parses header (overlapping ranges)', async () => {
 
         expect(Ammo.header('bytes=1-5,5-10', 10)).to.equal([{ from: 1, to: 9 }]);
-        done();
     });
 });
 
 describe('Stream', () => {
 
-    it('returns a subset of a stream', (done) => {
+    it('returns a subset of a stream', async () => {
 
         const random = new Buffer(5000);
         const source = Wreck.toReadableStream(random);
         const range = Ammo.header('bytes=1000-4000', 5000);
         const stream = new Ammo.Stream(range[0]);
 
-        Wreck.read(source.pipe(stream), {}, (err, buffer) => {
-
-            expect(err).to.not.exist();
-            expect(buffer.toString()).to.equal(random.slice(1000, 4001).toString());
-            done();
-        });
+        const buffer = await Wreck.read(source.pipe(stream));
+        expect(buffer.toString()).to.equal(random.slice(1000, 4001).toString());
     });
 
-    it('processes multiple chunks', (done) => {
+    it('processes multiple chunks', async () => {
 
         const TestStream = function () {
 
@@ -139,11 +123,7 @@ describe('Stream', () => {
         const stream = new Ammo.Stream(range[0]);
 
         const source = new TestStream();
-        Wreck.read(source.pipe(stream), {}, (err, buffer) => {
-
-            expect(err).to.not.exist();
-            expect(buffer.toString()).to.equal('234');
-            done();
-        });
+        const buffer = await Wreck.read(source.pipe(stream));
+        expect(buffer.toString()).to.equal('234');
     });
 });
