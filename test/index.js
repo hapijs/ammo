@@ -24,57 +24,57 @@ const expect = Code.expect;
 
 describe('header()', () => {
 
-    it('parses header (start)', async () => {
+    it('parses header (start)', () => {
 
         expect(Ammo.header('bytes=0-4', 10)).to.equal([{ from: 0, to: 4 }]);
     });
 
-    it('parses header (middle)', async () => {
+    it('parses header (middle)', () => {
 
         expect(Ammo.header('bytes=1-5', 10)).to.equal([{ from: 1, to: 5 }]);
     });
 
-    it('parses header (-to)', async () => {
+    it('parses header (-to)', () => {
 
         expect(Ammo.header('bytes=-5', 10)).to.equal([{ from: 5, to: 9 }]);
     });
 
-    it('parses header (from-)', async () => {
+    it('parses header (from-)', () => {
 
         expect(Ammo.header('bytes=5-', 45000)).to.equal([{ from: 5, to: 44999 }]);
     });
 
-    it('parses header (beyond end)', async () => {
+    it('parses header (beyond end)', () => {
 
         expect(Ammo.header('bytes=10-20', 15)).to.equal([{ from: 10, to: 14 }]);
     });
 
-    it('parses header (wrong unit)', async () => {
+    it('parses header (wrong unit)', () => {
 
         expect(Ammo.header('horses=1-5', 10)).to.equal(null);
     });
 
-    it('parses header (flipped)', async () => {
+    it('parses header (flipped)', () => {
 
         expect(Ammo.header('bytes=5-1', 10)).to.equal(null);
     });
 
-    it('parses header (missing =)', async () => {
+    it('parses header (missing =)', () => {
 
         expect(Ammo.header('bytes 1-5', 10)).to.equal(null);
     });
 
-    it('parses header (missing to and from)', async () => {
+    it('parses header (missing to and from)', () => {
 
         expect(Ammo.header('bytes=-', 10)).to.equal(null);
     });
 
-    it('parses header (multiple ranges)', async () => {
+    it('parses header (multiple ranges)', () => {
 
         expect(Ammo.header('bytes=1-5,7-10', 10)).to.equal([{ from: 1, to: 5 }, { from: 7, to: 9 }]);
     });
 
-    it('parses header (overlapping ranges)', async () => {
+    it('parses header (overlapping ranges)', () => {
 
         expect(Ammo.header('bytes=1-5,5-10', 10)).to.equal([{ from: 1, to: 9 }]);
     });
