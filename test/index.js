@@ -104,7 +104,7 @@ describe('Stream', () => {
 
     it('returns a subset of a stream', async () => {
 
-        const random = new Buffer(5000);
+        const random = Buffer.alloc(5000);
         const source = Wreck.toReadableStream(random);
         const range = Ammo.header('bytes=1000-4000', 5000);
         const stream = new Ammo.Stream(range[0]);
@@ -150,7 +150,7 @@ describe('Stream', () => {
 
     it('emits error on internal processing errors', async () => {
 
-        const random = new Buffer(5000);
+        const random = Buffer.alloc(5000);
         const source = Wreck.toReadableStream(random);
         const stream = new Ammo.Stream({ from: 1000, to: 4000 });
 
