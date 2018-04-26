@@ -6,7 +6,6 @@ const Stream = require('stream');
 
 const Ammo = require('..');
 const Code = require('code');
-const Hoek = require('hoek');
 const Lab = require('lab');
 const Wreck = require('wreck');
 
@@ -82,6 +81,27 @@ describe('header()', () => {
 
 describe('Stream', () => {
 
+    it('throws on invalid ranges', () => {
+
+        const create = (range) => {
+
+            return () => {
+
+                new Ammo.Stream(range);
+            };
+        };
+
+        expect(create()).to.throw(Error);
+        expect(create(true)).to.throw(Error);
+        expect(create({ from: 'banana', to: [] })).to.throw(Error);
+        expect(create({ from: 0.3 })).to.throw(Error);
+        expect(create({ from: 0.3, to: 10 })).to.throw(Error);
+        expect(create({ from: -4, to: 10 })).to.throw(Error);
+        expect(create({ to: -10 })).to.throw(Error);
+        expect(create({ from: 4, to: 10.4 })).to.throw(Error);
+        expect(create({ from: 4, to: 0 })).to.throw(Error);
+    });
+
     it('returns a subset of a stream', async () => {
 
         const random = new Buffer(5000);
@@ -95,28 +115,29 @@ describe('Stream', () => {
 
     it('processes multiple chunks', async () => {
 
-        const TestStream = function () {
+        const TestStream = class extends Stream.Readable {
 
-            Stream.Readable.call(this);
-            this._count = -1;
-        };
+            constructor() {
 
-        Hoek.inherits(TestStream, Stream.Readable);
-
-        TestStream.prototype._read = function (size) {
-
-            this._count++;
-
-            if (this._count > 10) {
-                return;
+                super();
+                this._count = -1;
             }
 
-            if (this._count === 10) {
-                this.push(null);
-                return;
-            }
+            _read() {
 
-            this.push(this._count.toString());
+                this._count++;
+
+                if (this._count > 10) {
+                    return;
+                }
+
+                if (this._count === 10) {
+                    this.push(null);
+                    return;
+                }
+
+                this.push(this._count.toString());
+            }
         };
 
         const range = Ammo.header('bytes=2-4', 10);
@@ -125,5 +146,16 @@ describe('Stream', () => {
         const source = new TestStream();
         const buffer = await Wreck.read(source.pipe(stream));
         expect(buffer.toString()).to.equal('234');
+    });
+
+    it('emits error on internal processing errors', async () => {
+
+        const random = new Buffer(5000);
+        const source = Wreck.toReadableStream(random);
+        const stream = new Ammo.Stream({ from: 1000, to: 4000 });
+
+        stream._range = null;         // Force a processing error
+
+        await expect(Wreck.read(source.pipe(stream))).to.reject(Error);
     });
 });
