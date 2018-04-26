@@ -81,6 +81,27 @@ describe('header()', () => {
 
 describe('Stream', () => {
 
+    it('throws on invalid ranges', () => {
+
+        const create = (range) => {
+
+            return () => {
+
+                new Ammo.Stream(range);
+            };
+        };
+
+        expect(create()).to.throw(Error);
+        expect(create(true)).to.throw(Error);
+        expect(create({ from: 'banana', to: [] })).to.throw(Error);
+        expect(create({ from: 0.3 })).to.throw(Error);
+        expect(create({ from: 0.3, to: 10 })).to.throw(Error);
+        expect(create({ from: -4, to: 10 })).to.throw(Error);
+        expect(create({ to: -10 })).to.throw(Error);
+        expect(create({ from: 4, to: 10.4 })).to.throw(Error);
+        expect(create({ from: 4, to: 0 })).to.throw(Error);
+    });
+
     it('returns a subset of a stream', async () => {
 
         const random = new Buffer(5000);
