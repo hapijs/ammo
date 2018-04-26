@@ -126,4 +126,15 @@ describe('Stream', () => {
         const buffer = await Wreck.read(source.pipe(stream));
         expect(buffer.toString()).to.equal('234');
     });
+
+    it('emits error on internal processing errors', async () => {
+
+        const random = new Buffer(5000);
+        const source = Wreck.toReadableStream(random);
+        const stream = new Ammo.Stream({ from: 1000, to: 4000 });
+
+        stream._range = null;         // Force a processing error
+
+        await expect(Wreck.read(source.pipe(stream))).to.reject(Error);
+    });
 });
