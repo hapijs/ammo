@@ -6,7 +6,6 @@ const Stream = require('stream');
 
 const Ammo = require('..');
 const Code = require('code');
-const Hoek = require('hoek');
 const Lab = require('lab');
 const Wreck = require('wreck');
 
@@ -95,28 +94,29 @@ describe('Stream', () => {
 
     it('processes multiple chunks', async () => {
 
-        const TestStream = function () {
+        const TestStream = class extends Stream.Readable {
 
-            Stream.Readable.call(this);
-            this._count = -1;
-        };
+            constructor() {
 
-        Hoek.inherits(TestStream, Stream.Readable);
-
-        TestStream.prototype._read = function (size) {
-
-            this._count++;
-
-            if (this._count > 10) {
-                return;
+                super();
+                this._count = -1;
             }
 
-            if (this._count === 10) {
-                this.push(null);
-                return;
-            }
+            _read() {
 
-            this.push(this._count.toString());
+                this._count++;
+
+                if (this._count > 10) {
+                    return;
+                }
+
+                if (this._count === 10) {
+                    this.push(null);
+                    return;
+                }
+
+                this.push(this._count.toString());
+            }
         };
 
         const range = Ammo.header('bytes=2-4', 10);
