@@ -1,21 +1,16 @@
 'use strict';
 
-// Load modules
-
 const Stream = require('stream');
+
 const Ammo = require('..');
 const Code = require('code');
-const Hoek = require('hoek');
+const Hoek = require('@commercial/hoek');
 const Lab = require('lab');
-const Wreck = require('wreck');
+const Wreck = require('@commercial/wreck');
 
-
-// Declare internals
 
 const internals = {};
 
-
-// Test shortcuts
 
 const lab = exports.lab = Lab.script();
 const describe = lab.describe;
@@ -96,7 +91,7 @@ describe('Stream', () => {
 
     it('returns a subset of a stream', (done) => {
 
-        const random = new Buffer(5000);
+        const random = Buffer.alloc(5000);
         const source = Wreck.toReadableStream(random);
         const range = Ammo.header('bytes=1000-4000', 5000);
         const stream = new Ammo.Stream(range[0]);
