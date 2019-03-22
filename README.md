@@ -2,7 +2,7 @@
 
 HTTP Range processing utilities.
 
-[![Build Status](https://travis-ci.org/hapijs/ammo.svg?branch=v4-commercial)](https://travis-ci.org/hapijs/ammo)
+[![Build Status](https://travis-ci.org/hapijs/ammo.svg?branch=v2-commercial)](https://travis-ci.org/hapijs/ammo)
 
 ## License
 
