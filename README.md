@@ -2,7 +2,6 @@
 
 HTTP Range processing utilities.
 
-[![Npm Version](https://img.shields.io/npm/v/ammo.svg)](https://npmjs.com/package/ammo)
 [![Build Status](https://secure.travis-ci.org/hapijs/ammo.png)](http://travis-ci.org/hapijs/ammo)
 
 Lead Maintainer - [Gil Pedersen](https://github.com/kanongil)

@@ -1,21 +1,15 @@
 'use strict';
 
-// Load modules
-
 const Stream = require('stream');
 
 const Ammo = require('..');
-const Code = require('code');
-const Lab = require('lab');
-const Wreck = require('wreck');
+const Code = require('@hapi/code');
+const Lab = require('@hapi/lab');
+const Wreck = require('@hapi/wreck');
 
-
-// Declare internals
 
 const internals = {};
 
-
-// Test shortcuts
 
 const { describe, it } = exports.lab = Lab.script();
 const expect = Code.expect;
