@@ -1,10 +1,14 @@
 {
   "name": "@hapi/ammo",
   "description": "HTTP Range processing utilities",
-  "version": "3.0.3",
+  "version": "3.1.0",
   "repository": "git://github.com/hapijs/ammo",
   "main": "lib/index.js",
-  "keywords": ["http", "range", "utilities"],
+  "keywords": [
+    "http",
+    "range",
+    "utilities"
+  ],
   "dependencies": {
     "@hapi/hoek": "6.x.x"
   },
