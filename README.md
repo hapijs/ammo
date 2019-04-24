@@ -20,7 +20,7 @@ const range = Ammo.header('bytes=1-5,7-10', 10);
 // streams (get range within a `source`)
 const range = Ammo.header('bytes=1000-4000', 5000);
 const stream = new Ammo.Stream(range[0]);
-const buffer = async Wreck.read(source.pipe(stream));
+const buffer = await Wreck.read(source.pipe(stream));
 
 // buffer is the portion of source within range
 ```
