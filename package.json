@@ -1,7 +1,7 @@
 {
   "name": "@hapi/ammo",
   "description": "HTTP Range processing utilities",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "repository": "git://github.com/hapijs/ammo",
   "main": "lib/index.js",
   "keywords": [
