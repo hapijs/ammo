@@ -4,7 +4,7 @@
 
 HTTP Range processing utilities.
 
-[![Build Status](https://secure.travis-ci.org/hapijs/ammo.png)](http://travis-ci.org/hapijs/ammo) [![Greenkeeper badge](https://badges.greenkeeper.io/hapijs/ammo.svg)](https://greenkeeper.io/)
+[![Build Status](https://secure.travis-ci.org/hapijs/ammo.png)](http://travis-ci.org/hapijs/ammo)
 
 ## Usage
 
