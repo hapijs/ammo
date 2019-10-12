@@ -152,4 +152,45 @@ describe('Stream', () => {
 
         await expect(Wreck.read(source.pipe(stream))).to.reject(Error);
     });
+
+    it('ends stream when the requested bytes are delivered regardless of upstream status', async () => {
+
+        const TestStream = class extends Stream.Readable {
+
+            constructor() {
+
+                super();
+                this._count = -1;
+            }
+
+            _read() {
+
+                this._count++;
+
+                if (this._count < 10) {
+                    this.push(this._count.toString());
+                    return;
+                }
+
+                this.emit('error', new Error('Failed'));
+                this.push(null);
+            }
+        };
+
+        const range = Ammo.header('bytes=2-9', 10);
+        const stream = new Ammo.Stream(range[0]);
+
+        const source = new TestStream();
+
+        let errored = false;
+        source.on('error', () => {
+
+            errored = true;
+        });
+
+        const buffer = await Wreck.read(source.pipe(stream));
+        expect(buffer.toString()).to.equal('23456789');
+        expect(source._count).to.equal(10);
+        expect(errored).to.be.true();
+    });
 });
