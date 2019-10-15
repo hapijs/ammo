@@ -81,7 +81,7 @@ describe('Stream', () => {
 
             return () => {
 
-                new Ammo.Stream(range);
+                new Ammo.Clip(range);
             };
         };
 
@@ -101,7 +101,7 @@ describe('Stream', () => {
         const random = Buffer.alloc(5000);
         const source = Wreck.toReadableStream(random);
         const range = Ammo.header('bytes=1000-4000', 5000);
-        const stream = new Ammo.Stream(range[0]);
+        const stream = new Ammo.Clip(range[0]);
 
         const buffer = await Wreck.read(source.pipe(stream));
         expect(buffer.toString()).to.equal(random.slice(1000, 4001).toString());
@@ -135,7 +135,7 @@ describe('Stream', () => {
         };
 
         const range = Ammo.header('bytes=2-4', 10);
-        const stream = new Ammo.Stream(range[0]);
+        const stream = new Ammo.Clip(range[0]);
 
         const source = new TestStream();
         const buffer = await Wreck.read(source.pipe(stream));
@@ -146,7 +146,7 @@ describe('Stream', () => {
 
         const random = Buffer.alloc(5000);
         const source = Wreck.toReadableStream(random);
-        const stream = new Ammo.Stream({ from: 1000, to: 4000 });
+        const stream = new Ammo.Clip({ from: 1000, to: 4000 });
 
         stream._range = null;         // Force a processing error
 
@@ -178,7 +178,7 @@ describe('Stream', () => {
         };
 
         const range = Ammo.header('bytes=2-9', 10);
-        const stream = new Ammo.Stream(range[0]);
+        const stream = new Ammo.Clip(range[0]);
 
         const source = new TestStream();
 
