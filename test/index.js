@@ -5,7 +5,7 @@ const Stream = require('stream');
 const Ammo = require('..');
 const Code = require('@hapi/code');
 const Lab = require('@hapi/lab');
-const Wreck = require('@hapi/wreck');
+const Wreck = require('@commercial/wreck');
 
 
 const internals = {};
