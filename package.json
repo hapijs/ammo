@@ -1,8 +1,11 @@
 {
-    "name": "@hapi/ammo",
+    "name": "@commercial/ammo",
     "description": "HTTP Range processing utilities",
     "version": "5.0.1",
     "repository": "git://github.com/hapijs/ammo",
+    "engines": {
+        "node": ">=12.0.0"
+    },
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
     "keywords": [
@@ -14,7 +17,7 @@
         "lib"
     ],
     "dependencies": {
-        "@hapi/hoek": "9.x.x"
+        "@commercial/hoek": "9.x.x"
     },
     "devDependencies": {
         "@hapi/code": "8.x.x",
@@ -25,5 +28,5 @@
         "test": "lab -a @hapi/code -t 100 -L -Y",
         "test-cov-html": "lab -a @hapi/code -r html -o coverage.html"
     },
-    "license": "BSD-3-Clause"
+    "license": "SEE LICENSE IN LICENSE.md"
 }
