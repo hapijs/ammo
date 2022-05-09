@@ -107,6 +107,16 @@ describe('Stream', () => {
         expect(buffer.toString()).to.equal(random.slice(1000, 4001).toString());
     });
 
+    it('returns a minimal subset of a stream', async () => {
+
+        const random = Buffer.alloc(5000);
+        const source = Wreck.toReadableStream(random);
+        const stream = new Ammo.Clip({ from: null, to: null }); // Defaults to range 0-0
+
+        const buffer = await Wreck.read(source.pipe(stream));
+        expect(buffer.toString()).to.equal(random.slice(0, 1).toString());
+    });
+
     it('processes multiple chunks', async () => {
 
         const TestStream = class extends Stream.Readable {
