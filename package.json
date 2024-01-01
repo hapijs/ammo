@@ -1,7 +1,7 @@
 {
   "name": "ammo",
   "description": "HTTP Range processing utilities",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "repository": "git://github.com/hapijs/ammo",
   "engines": {
     "node": ">=12.0.0"
