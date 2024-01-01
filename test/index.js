@@ -4,9 +4,9 @@ const Stream = require('stream');
 
 const Ammo = require('..');
 const Code = require('code');
-const Hoek = require('@commercial/hoek');
+const Hoek = require('hoek');
 const Lab = require('lab');
-const Wreck = require('@commercial/wreck');
+const Wreck = require('wreck');
 
 
 const internals = {};
