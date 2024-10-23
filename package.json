@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@hapi/code": "^9.0.3",
-    "@hapi/eslint-plugin": "*",
+    "@hapi/eslint-plugin": "^6.0.0",
     "@hapi/lab": "^25.1.2",
     "@hapi/wreck": "^18.0.1",
     "@types/node": "^17.0.31",
