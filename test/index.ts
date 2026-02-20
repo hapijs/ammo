@@ -1,6 +1,6 @@
 import * as Stream from 'stream';
 
-import * as Ammo from '..';
+import * as Ammo from '../lib/index.js';
 import * as Code from '@hapi/code';
 import * as Lab from '@hapi/lab';
 import * as Wreck from '@hapi/wreck';

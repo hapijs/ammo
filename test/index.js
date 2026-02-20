@@ -1,18 +1,18 @@
-'use strict';
+import Stream from 'node:stream';
 
-const Stream = require('stream');
-
-const Ammo = require('..');
-const Code = require('@hapi/code');
-const Lab = require('@hapi/lab');
-const Wreck = require('@hapi/wreck');
+import * as Ammo from '../lib/index.js';
+import * as Code from '@hapi/code';
+import * as Lab from '@hapi/lab';
+import Wreck from '@hapi/wreck';
 
 
 const internals = {};
 
 
-const { describe, it } = exports.lab = Lab.script();
+const lab = Lab.script();
+const { describe, it } = lab;
 const expect = Code.expect;
+export { lab };
 
 
 describe('header()', () => {

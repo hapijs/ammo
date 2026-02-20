@@ -1,9 +1,10 @@
 {
   "name": "@hapi/ammo",
   "description": "HTTP Range processing utilities",
-  "version": "6.0.1",
+  "version": "7.0.0",
+  "type": "module",
   "repository": "git://github.com/hapijs/ammo",
-  "main": "lib/index.js",
+  "exports": "./lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
     "http",
@@ -30,7 +31,7 @@
     "typescript": "~4.6.4"
   },
   "scripts": {
-    "test": "lab -a @hapi/code -t 100 -L -Y",
+    "test": "lab -a @hapi/code -Y",
     "test-cov-html": "lab -a @hapi/code -r html -o coverage.html"
   },
   "license": "BSD-3-Clause"
