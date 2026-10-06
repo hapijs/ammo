@@ -1,52 +1,60 @@
-import * as Stream from 'stream';
+import * as Stream from 'node:stream';
 
-import * as Ammo from '..';
-import * as Code from '@hapi/code';
-import * as Lab from '@hapi/lab';
-import * as Wreck from '@hapi/wreck';
+import Wreck from '@hapi/wreck';
+import { assert, describe, expect, expectTypeOf, it } from 'vitest';
 
+import * as Ammo from '../src/index.js';
 
-const { expect } = Lab.types;
+describe('typings', () => {
+    describe('header()', () => {
+        it('accepts a header string and a length', () => {
+            expectTypeOf(Ammo.header).toBeCallableWith('bytes=2-9', 10);
+        });
 
+        it('returns a range array or null', () => {
+            expectTypeOf(Ammo.header('bytes=2-9', 10)).toEqualTypeOf<Ammo.Range[] | null>();
+        });
 
-const TestStream = class extends Stream.Readable {
+        it('requires a string header and a length', () => {
+            // @ts-expect-error header and length are required
+            expectTypeOf(Ammo.header).toBeCallableWith();
+            // @ts-expect-error object is not assignable to string
+            expectTypeOf(Ammo.header).toBeCallableWith({}, 45);
+            // @ts-expect-error length is required
+            expectTypeOf(Ammo.header).toBeCallableWith('x');
+        });
+    });
 
-    _count: number;
+    describe('Clip', () => {
+        it('clips a piped stream to a parsed range', async () => {
+            const TestStream = class extends Stream.Readable {
+                _count: number;
 
-    constructor() {
+                constructor() {
+                    super();
+                    this._count = -1;
+                }
 
-        super();
-        this._count = -1;
-    }
+                override _read() {
+                    this._count++;
 
-    _read() {
+                    if (this._count < 10) {
+                        this.push(this._count.toString());
+                        return;
+                    }
 
-        this._count++;
+                    this.push(null);
+                }
+            };
 
-        if (this._count < 10) {
-            this.push(this._count.toString());
-            return;
-        }
+            const [range] = Ammo.header('bytes=2-9', 10) ?? [];
+            assert(range);
+            const stream = new Ammo.Clip(range);
 
-        this.push(null);
-    }
-};
+            const source = new TestStream();
 
-const range = Ammo.header('bytes=2-9', 10) as Ammo.Range[];
-const stream = new Ammo.Clip(range[0]);
-
-const source = new TestStream();
-
-const buffer = await Wreck.read(source.pipe(stream));
-Code.expect(buffer.toString()).to.equal('23456789');
-
-
-// header()
-
-Ammo.header('bytes=2-9', 10);
-
-expect.type<Ammo.Range[] | null>(Ammo.header('bytes=2-9', 10));
-
-expect.error(Ammo.header());
-expect.error(Ammo.header({}, 45));
-expect.error(Ammo.header('x'));
+            const buffer = await Wreck.read(source.pipe(stream));
+            expect(buffer.toString()).toBe('23456789');
+        });
+    });
+});
