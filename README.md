@@ -15,4 +15,3 @@
 - [Changelog](https://hapi.dev/family/ammo/changelog/)
 - [Project policies](https://hapi.dev/policies/)
 - [Free and commercial support options](https://hapi.dev/support/)
-

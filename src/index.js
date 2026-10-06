@@ -2,26 +2,19 @@ import Stream from 'node:stream';
 
 import * as Hoek from '@hapi/hoek';
 
-
-const internals = {};
-
-
 // RFC 7233 (https://tools.ietf.org/html/rfc7233#appendix-D)
 //
 // Range = "bytes" "=" byte-range-set
 // byte-range-set = *( "," OWS ) byte-range-spec *( OWS "," [ OWS byte-range-spec ] )
 // byte-range-spec = ( 1*DIGIT "-" [ 1*DIGIT ] ) / ( "-" 1*DIGIT )
 
-
 //                                12  3          3 4       425         6  7          7 8       865 1
-internals.headerRx = /^bytes=[\s,]*((?:(?:\d+\-\d*)|(?:\-\d+))(?:\s*,\s*(?:(?:\d+\-\d*)|(?:\-\d+)))*)$/i;
+const headerRx = /^bytes=[\s,]*((?:(?:\d+\-\d*)|(?:\-\d+))(?:\s*,\s*(?:(?:\d+\-\d*)|(?:\-\d+)))*)$/i;
 
-
-const header = function (header, length) {
-
+export function header(header, length) {
     // Parse header
 
-    const parts = internals.headerRx.exec(header);
+    const parts = headerRx.exec(header);
     if (!parts) {
         return null;
     }
@@ -43,19 +36,18 @@ const header = function (header, length) {
 
         if (range[1]) {
             to = parseInt(range[1], 10);
-            if (from !== undefined) {      // Can be 0
+            if (from !== undefined) {
+                // Can be 0
                 // From-To
                 if (to > lastPos) {
                     to = lastPos;
                 }
-            }
-            else {
+            } else {
                 // -To
                 from = length - to;
                 to = lastPos;
             }
-        }
-        else {
+        } else {
             // From-
             to = lastPos;
         }
@@ -64,7 +56,7 @@ const header = function (header, length) {
             return null;
         }
 
-        result.push(new internals.Range(from, to));
+        result.push(new Range(from, to));
     }
 
     if (result.length === 1) {
@@ -81,8 +73,7 @@ const header = function (header, length) {
         const before = result[i - 1];
         if (current.from <= before.to + 1) {
             before.to = current.to;
-        }
-        else {
+        } else {
             consolidated.unshift(current);
         }
     }
@@ -90,24 +81,18 @@ const header = function (header, length) {
     consolidated.unshift(result[0]);
 
     return consolidated;
-};
+}
 
-
-internals.Range = class {
-
+class Range {
     constructor(from, to) {
-
         this.from = from;
         this.to = to;
     }
-};
+}
 
-
-const Clip = class extends Stream.Transform {
-
+export class Clip extends Stream.Transform {
     constructor(range) {
-
-        if (!(range instanceof internals.Range)) {
+        if (!(range instanceof Range)) {
             Hoek.assert(typeof range === 'object', 'Expected "range" object');
 
             const from = range.from ?? 0;
@@ -120,7 +105,7 @@ const Clip = class extends Stream.Transform {
 
             Hoek.assert(to >= from, '"range.to" must be greater than or equal to "range.from"');
 
-            range = new internals.Range(from, to);
+            range = new Range(from, to);
         }
 
         super();
@@ -134,11 +119,9 @@ const Clip = class extends Stream.Transform {
     }
 
     _transform(chunk, encoding, done) {
-
         try {
-            internals.processChunk(this, chunk);
-        }
-        catch (err) {
+            processChunk(this, chunk);
+        } catch (err) {
             return done(err);
         }
 
@@ -146,25 +129,24 @@ const Clip = class extends Stream.Transform {
     }
 
     _flush(done) {
-
         this._pipes.clear();
         done();
     }
-};
+}
 
-
-internals.processChunk = function (stream, chunk) {
-
+function processChunk(stream, chunk) {
     // Read desired range from a stream
 
     const pos = stream._next;
     stream._next = stream._next + chunk.length;
 
-    if (stream._next <= stream._range.from) {           // Before range
+    if (stream._next <= stream._range.from) {
+        // Before range
         return;
     }
 
-    if (pos > stream._range.to) {                       // After range
+    if (pos > stream._range.to) {
+        // After range
         for (const pipe of stream._pipes) {
             pipe.unpipe(stream);
         }
@@ -180,7 +162,4 @@ internals.processChunk = function (stream, chunk) {
     const to = Math.min(chunk.length, stream._range.to - pos + 1);
 
     stream.push(chunk.slice(from, to));
-};
-
-
-export { header, Clip };
+}
